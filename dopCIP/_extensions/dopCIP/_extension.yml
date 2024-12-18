@@ -1,0 +1,13 @@
+title: dopCIP
+author: Eli Pousson
+version: 1.0.0
+quarto-required: ">=1.6.0"
+contributes:
+  formats:
+    typst:
+      authors:
+      -  'Baltimore City Department of Planning'
+      template-partials:
+        - typst-template.typ
+        - typst-show.typ
+

@@ -1,0 +1,49 @@
+---
+title: Untitled
+format:
+  dopCIP-typst:
+    table-of-contents: true
+---
+
+# Level 1 heading
+
+## Level 2 heading
+
+{{< lipsum 1 >}}
+
+You can learn more about creating custom Typst templates here: 
+
+<https://quarto.org/docs/prerelease/1.4/typst.html#custom-formats>
+
+## Second Level 2 heading
+
+```{r}
+#| label: fig-example
+#| fig-cap: Example figure caption
+#| echo: false
+plot(mtcars)
+```
+
+```{r}
+#| label: tbl-example
+#| tbl-cap: Example table caption
+#| echo: false
+
+if (rlang::is_installed("gt")) {
+  gt::gt(mtcars)
+}
+```
+
+Example of a definition list:
+
+Term
+: Definition
+
+Second Term
+: Second Definition
+
+### Level 3 heading
+
+{{< lipsum 1 >}}
+
+
