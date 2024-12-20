@@ -174,7 +174,7 @@
   )
   
   // Set table typography
-  show table: set text(font: monofont, slashed-zero: false, size: fontsize)
+  show table: set text(font: monofont)
   
   // Set figure caption
   show figure.caption: set text(fill: accentcolor)
@@ -218,25 +218,30 @@
   
   if title != none {
     align(title-align)[#block(inset: title-inset)[
-      #text(font: title-font, weight: "bold", size: 3em)[#upper[#title]]
+      #par(leading: 0.45em)[
+        #text(font: title-font, weight: "bold", size: 3em)[#upper[#title]]
+      ]
+      
     ]]
     
     rect(width: 100%, height: 6em, fill: accentcolor-light)
   }
   
+  date = datetime.today().display()
+  
   // Show authors
 
   if authors != none {
     align(title-align)[#block(inset: title-inset)[
-        #text()[#author-string]
+        #text(weight: "bold", size: 1.25em)[#author-string]
       ]]
   }
   
   // Show date
 
   if date != none {
-    align(center)[#block(inset: 1em)[
-      #date
+    align(title-align)[#block(inset: title-inset)[
+      #text(size: 1.25em)[#date]
     ]]
   }
   
