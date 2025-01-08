@@ -273,7 +273,7 @@
 
   // Set table typography
   show table: set text(font: table-font)
-  show table.cell.where(y: 0): strong
+  // show table.cell.where(y: 0): strong
 
   if strong-header-tables {
     // TODO: Make strong header tables optional
@@ -336,12 +336,32 @@
         ]
       ]]
     }
+  }
 
-    // Show color bar on title page
+
+  // Show color bar on title page
     v(4%)
     rect(width: 100%, outset: (x: 100%), height: 8em, fill: accentcolor-light)
     v(4%)
-  }
+
+    place(
+      bottom + left,
+      grid(
+        columns: (2.5in, 2.5in),
+          gutter: 0in,
+          align: left + horizon,
+          image(
+              "baltimore-city-dop-logo.png",
+              height: 1.75in,
+              fit: "contain"
+          ),
+            image(
+            "baltimore-city-logo.png",
+            height: 1.5in,
+            fit: "contain"
+          )
+      )
+)
 
   // Show authors
 
