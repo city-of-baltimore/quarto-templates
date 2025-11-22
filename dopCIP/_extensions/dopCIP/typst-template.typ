@@ -1,5 +1,5 @@
 // import hydra package for header/footer
-#import "@preview/hydra:0.5.1": hydra, anchor
+#import "@preview/hydra:0.6.2": hydra, anchor
 
 // Parse date function for quarto-invoice
 //
@@ -75,9 +75,9 @@
 
   // Typography
 
-  font: ("Lora", "Georgia",),
+  font: ("Lora", "Georgia", "Libertinus Serif", ),
   fontsize: 11pt,
-  monofont: ("Source Code Pro", "Courier", ),
+  monofont: ("Source Code Pro", "DejaVu Sans Mono", ),
 
   // Body text typography
 
@@ -92,6 +92,8 @@
 
   heading-font: ("Raleway", "Arial", ),
   heading-fontsize: 1.4em,
+  heading-weight: "bold",
+  heading-style: "normal",
   sectionnumbering: none,
 
   // Title typography
@@ -109,7 +111,7 @@
   linkcolor: "#00415F",
 
   // Table settings
-  table-font: ("Source Sans Pro", "Arial", ),
+  table-font: ("Source Sans 3", "Arial", ),
   caption-font: ("Raleway", "Arial", ),
 
   // TODO: Implement these options
@@ -204,16 +206,14 @@
 
   // Set paragraph properties
   set par(
+    leading: leading,
+    spacing: spacing,
     justify: justify,
+    linebreaks: linebreaks,
     first-line-indent: first-line-indent,
     hanging-indent: hanging-indent,
-    linebreaks: linebreaks,
-    leading: leading,
+
   )
-
-  // Set general typography
-
-  show par: set block(spacing: spacing)
 
   set text(lang: lang,
            region: region,
@@ -227,6 +227,8 @@
   show heading: it => {
     set text(
       font: heading-font,
+      weight: heading-weight,
+      style: heading-style,
       size: if it.level < 4 {
         heading-fontsize
       } else if it.level < 5 {
@@ -248,7 +250,11 @@
 
   // Set up ToC
   // https://typst.app/docs/reference/model/outline/#definitions-entry
-  set outline(fill: none, indent: 2em)
+  set outline(
+    indent: 2em
+  )
+
+  set outline.entry(fill: none)
 
   // Set level 1 ToC typography
   show outline.entry.where(

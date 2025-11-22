@@ -63,7 +63,7 @@ $endif$
 // Heading typogrpahy
 
 $if(heading-font)$
-  heading-font: ("$heading-font$"),
+  heading-font: ("$heading-font$",),
 $endif$
 $if(heading-fontsize)$
   heading-fontsize: $heading-fontsize$,
@@ -71,11 +71,17 @@ $endif$
 $if(section-numbering)$
   sectionnumbering: "$section-numbering$",
 $endif$
+$if(heading-weight)$
+  heading-weight: heading-weight,
+$endif$
+$if(heading-style)$
+  heading-style: "$heading-style$",
+$endif$
 
 // Title typography
 
 $if(title-font)$
-  title-font: ("$title-font$"),
+  title-font: ("$title-font$",),
 $endif$
 $if(title-align)$
   title-align: $title-align$,
@@ -89,13 +95,13 @@ $endif$
 
 // Additional typographic parameters
 $if(monofont)$
-  monofont: ("$monofont$"),
+  monofont: ("$monofont$",),
 $endif$
 $if(table-font)$
-  table-font: ("$title-font$"),
+  table-font: ("$table-font$",),
 $endif$
 $if(caption-font)$
-  caption-font: ("$caption-font$"),
+  caption-font: ("$caption-font$",),
 $endif$
 
 // Colors
