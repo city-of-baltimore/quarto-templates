@@ -10,3 +10,6 @@ contributes:
       template-partials:
         - typst-template.typ
         - typst-show.typ
+      format-resources:
+        - baltimore-city-dop-logo.png
+        - baltimore-city-logo.png
