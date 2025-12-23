@@ -31,6 +31,9 @@ $if(abstract)$
   abstract: [$abstract$],
   abstract-title: "$labels.abstract$",
 $endif$
+  flipped: $flipped$,
+  show-cover: $show-cover$,
+  breakable-tables: $breakable-tables$,
 
 // Body text typography
 
