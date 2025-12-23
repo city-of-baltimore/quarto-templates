@@ -13,3 +13,6 @@ contributes:
       format-resources:
         - baltimore-city-dop-logo.png
         - baltimore-city-logo.png
+      show-cover: true
+      breakable-tables: true
+      flipped: false
