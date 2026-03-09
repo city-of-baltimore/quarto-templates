@@ -45,6 +45,38 @@
   x
 }
 
+#let tag-text(
+  title: none,
+  sep: " ",
+  text_color: black,
+  title_color: rgb("#0082BD"),
+  title_weight: "medium",
+  title_font: "Source Sans 3",
+  radius: 0.45em,
+  padding: 0.35em,
+  tag_background_color: white,
+  tag_inset: (x: 0.45em, y: 0.45em),
+  tag_baseline: 0.35em,
+  thickness: 0.06em,
+  body,
+  ) = {
+    // h(padding)
+    box(
+      stroke: (paint: title_color, thickness: thickness),
+      inset: tag_inset,
+      fill: tag_background_color,
+      radius: radius,
+      baseline: tag_baseline,
+      if title != none {
+        text(fill: title_color, font: title_font, weight: title_weight, title + sep + " ")
+        text(fill: text_color, body)
+      } else {
+        text(fill: text_color, body)
+      }
+    )
+    h(padding)
+}
+
 //------------------------------------------------------------------------------
 // Document Template
 //------------------------------------------------------------------------------
