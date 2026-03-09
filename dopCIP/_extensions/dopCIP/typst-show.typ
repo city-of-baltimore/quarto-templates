@@ -107,6 +107,10 @@ $if(caption-font)$
   caption-font: ("$caption-font$",),
 $endif$
 
+$if(logo-align)$
+  logo-align: $logo-align$,
+$endif$
+
 // Colors
 
 $if(accentcolor)$

@@ -70,7 +70,7 @@
   // Page layout
   cols: 1,
   gutter: 4%,
-  margin: (x: 1.25in, y: 1.25in),
+  margin: (x: 1in, y: 1.25in),
   paper: "us-letter",
   flipped: false,
 
@@ -131,6 +131,8 @@
 
   page-numbering: "1",
   page-number-align: right + bottom,
+
+  logo-align: left,
 
   // Footer
 
@@ -323,7 +325,7 @@
         h(-it.hanging-indent)
         text(
           font: table-font,
-          size: 0.85em,
+          size: 0.9em,
           fill: accentcolor,
           baseline: 0.5em,
         )[#strong(item.term)]
@@ -354,7 +356,7 @@ if show-cover [
     if subtitle != none {
       v(2%)
       align(title-align)[#block(inset: title-inset)[
-        #par(leading: 0.45em)[
+        #par(leading: 0.65em)[
           #text(font: title-font, fill: luma(45), weight: "extrabold", size: title-fontsize * 0.85)[#upper[#subtitle]]
         ]
       ]]
@@ -375,11 +377,11 @@ if show-cover [
   }
 
   #place(
-    bottom + left,
+    bottom + logo-align,
     grid(
       columns: (2.5in, 2.5in),
       gutter: 0in,
-      align: left + horizon,
+      align: logo-align + horizon,
         image(
               "baltimore-city-dop-logo.png",
               height: 1.75in,
@@ -414,11 +416,11 @@ if show-cover [
     #text(size: cover-fontsize * 0.8)[#before-date-modified #date-modified]
   ]]
 
-  // Cover should always be followed by page break
   #pagebreak()
 ]
 
-  // Show abstract (then add page break)
+  // Show abstract (after page break)
+
   if abstract != none {
     block(inset: title-inset)[
     #text(weight: "semibold")[$labels.abstract$] #h(1em) #abstract
@@ -427,7 +429,8 @@ if show-cover [
     pagebreak()
   }
 
-  // Show ToC (then add page break)
+  // Show ToC (after page break)
+
   if toc {
     let title = if toc_title == none {
       auto
@@ -441,8 +444,6 @@ if show-cover [
       indent: toc_indent
     );
     ]
-
-    pagebreak()
   }
 
   // Show document
