@@ -11,7 +11,7 @@ format:
 
 {{< lipsum 1 >}}
 
-You can learn more about creating custom Typst templates here: 
+You can learn more about creating custom Typst templates here:
 
 <https://quarto.org/docs/prerelease/1.4/typst.html#custom-formats>
 
@@ -42,8 +42,12 @@ Term
 Second Term
 : Second Definition
 
+
+Example of "tag text" with no title: [Text inside tag]{.tag-text}
+
+Example of "tag text" with title: [Text inside tag]{.tag-text title="Title of tag"}
+
+
 ### Level 3 heading
 
 {{< lipsum 1 >}}
-
-
