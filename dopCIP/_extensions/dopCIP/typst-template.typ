@@ -193,6 +193,7 @@
 
   // Formats the author's names in a list with commas and a
   // final "and".
+  authors = ifnone(authors, ())
   let names = authors.map(author => author.name)
   let author-string = if authors.len() == 2 {
     names.join(" and ")
@@ -401,7 +402,7 @@ if show-cover [
   #v(4%)
 
   // Show authors
-  #if authors != none {
+  #if authors.len() > 0 {
     align(title-align)[#block(inset: title-inset)[
         #text(weight: "bold", size: cover-fontsize)[#author-string]
       ]]
@@ -442,6 +443,8 @@ if show-cover [
 
   #if date-modified == none {
     date-modified = datetime.today().display(cover-date-format)
+  } else {
+    date-modified = parse-date(date-modified).display(cover-date-format)
   }
 
   #align(title-align)[#block(inset: title-inset)[

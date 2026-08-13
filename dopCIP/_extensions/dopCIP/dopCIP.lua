@@ -1,8 +1,12 @@
+local function escape_typst_string(s)
+    return s:gsub('\\', '\\\\'):gsub('"', '\\"')
+end
+
 function Span(el)
     if el.classes:includes('tag-text') then
         local args = ""
         if el.attributes.title then
-            args = 'title: "' .. el.attributes.title .. '"'
+            args = 'title: "' .. escape_typst_string(el.attributes.title) .. '"'
         end
 
         local inlines = pandoc.List({

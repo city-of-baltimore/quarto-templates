@@ -21,6 +21,15 @@ $endif$
 $if(date)$
   date: "$date$",
 $endif$
+$if(date-modified)$
+  date-modified: "$date-modified$",
+$endif$
+$if(before-date)$
+  before-date: [$before-date$],
+$endif$
+$if(before-date-modified)$
+  before-date-modified: [$before-date-modified$],
+$endif$
 $if(lang)$
   lang: "$lang$",
 $endif$
