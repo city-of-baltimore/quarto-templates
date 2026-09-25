@@ -109,6 +109,9 @@ $endif$
 $if(title-fontsize)$
   title-fontsize: $title-fontsize$,
 $endif$
+$if(title-weight)$
+  title-weight: "$title-weight$",
+$endif$
 $if(title-inset)$
   title-inset: $title-inset$,
 $endif$

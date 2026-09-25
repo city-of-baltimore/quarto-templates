@@ -45,6 +45,16 @@
   x
 }
 
+// Convert a numeric font weight from metadata (e.g. "600") to an integer;
+// weight names (e.g. "semibold") are returned unchanged
+#let as-weight(weight) = {
+  if type(weight) == str and weight.codepoints().all(c => c in "0123456789") {
+    return int(weight)
+  }
+
+  weight
+}
+
 // Text in an outlined box with an optional title (used by the dop-tag-text
 // span filter in dopCIP.lua)
 #let dop-tag-text(
@@ -134,6 +144,7 @@
 
   title-font: (),
   title-fontsize: 3em,
+  title-weight: "bold",
   title-align: left,
   title-inset: 0pt,
   title-leading: 1.35em,
@@ -188,10 +199,9 @@
   footer-font = ifnone(footer-font, heading-font)
   caption-font = ifnone(caption-font, heading-font)
 
-  // Convert numeric heading weight from metadata (e.g. "600") to an integer
-  if type(heading-weight) == str and heading-weight.codepoints().all(c => c in "0123456789") {
-    heading-weight = int(heading-weight)
-  }
+  // Convert numeric weights from metadata to integers
+  heading-weight = as-weight(heading-weight)
+  title-weight = as-weight(title-weight)
 
   // Set font sizes from defaults
   heading-fontsize = ifnone(heading-fontsize, fontsize)
@@ -430,7 +440,7 @@ if show-cover [
     v(10%)
     align(title-align)[#block(inset: title-inset)[
       #par(leading: title-leading)[
-        #text(font: title-font, weight: "bold", size: title-fontsize)[#upper[#title]]
+        #text(font: title-font, weight: title-weight, size: title-fontsize)[#upper[#title]]
       ]
     ]]
 
@@ -513,7 +523,7 @@ if show-cover [
 
         #if title != none {
           par(leading: 0.5em)[
-            #text(font: title-font, weight: "bold", size: title-fontsize * 0.75)[#upper[#title]]
+            #text(font: title-font, weight: title-weight, size: title-fontsize * 0.75)[#upper[#title]]
           ]
         }
 

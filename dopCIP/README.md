@@ -35,6 +35,7 @@ These are the custom features supported by this custom format:
 - Title page
   - Set `show-cover: false` to hide the title page (defaults to `true`)
   - Font and size for title and subtitle set by `title-font` (defaults to match `heading-font`) and `title-fontsize`
+  - Title weight set by `title-weight` as a name (e.g. `semibold`, `regular`) or number from 100 to 900 (defaults to `bold`); also applies to the title band
   - Set `before-date` and `before-date-modified` to insert text before dates
   - `date` is passed as string (not datetime) and `date-modified` is always displayed (`date` parsing uses a function from the [quarto-invoice](https://github.com/mcanouil/quarto-invoice) custom Typst format)
   - Author font size scaled to 0.5 of `title-fontsize` and dates font size scaled to 0.4 of `title-fontsize`
