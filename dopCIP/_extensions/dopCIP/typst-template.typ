@@ -312,19 +312,25 @@
 
   set outline.entry(fill: none)
 
-  // Set level 1 ToC typography
-  show outline.entry.where(
-    level: 1
-  ): it => {
-    v(12pt, weak: true)
-    text(font: heading-font, size: 1.1em, weight: "bold")[#it]
-  }
+  // Set ToC entry typography per level, keeping the page number in a
+  // consistent font and weight across all levels (only the heading label
+  // varies)
+  show outline.entry: it => {
+    if it.level == 1 {
+      v(12pt, weak: true)
+    }
 
-  // Set level 2 ToC typography
-  show outline.entry.where(
-    level: 2
-  ): it => {
-    text(font: heading-font, size: 1em)[#it]
+    let label = if it.level == 1 {
+      text(font: heading-font, size: 1.1em, weight: "bold")[#it.body()]
+    } else if it.level == 2 {
+      text(font: heading-font, size: 1em)[#it.body()]
+    } else {
+      text(font: heading-font)[#it.body()]
+    }
+
+    let page-number = text(font: heading-font, weight: "regular")[#it.page()]
+
+    it.indented(it.prefix(), label + h(1fr) + page-number)
   }
 
   // Set figure caption font and color
