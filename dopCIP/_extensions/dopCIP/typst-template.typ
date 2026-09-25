@@ -66,8 +66,10 @@
   title-font: ("Source Sans 3", "Arial", ),
   radius: 0.45em,
   fill: white,
-  inset: (x: 0.45em),
-  outset: (y: 0.35em),
+  // Vertical inset adds space between the tag and the lines before and
+  // after; outset adds more padding without changing the line spacing
+  inset: (x: 0.45em, y: 0.25em),
+  outset: (y: 0.2em),
   baseline: 0em,
   thickness: 0.06em,
   body,
@@ -114,6 +116,11 @@
   cols: 1,
   gutter: 4%,
   margin: (x: 1in, y: 1.25in),
+  // Individual margins (take precedence over margin)
+  margin-top: none,
+  margin-bottom: none,
+  margin-left: none,
+  margin-right: none,
   paper: "us-letter",
   flipped: false,
 
@@ -145,6 +152,7 @@
   title-font: (),
   title-fontsize: 3em,
   title-weight: "bold",
+  subtitle-weight: "medium",
   title-align: left,
   title-inset: 0pt,
   title-leading: 1.35em,
@@ -202,6 +210,7 @@
   // Convert numeric weights from metadata to integers
   heading-weight = as-weight(heading-weight)
   title-weight = as-weight(title-weight)
+  subtitle-weight = as-weight(subtitle-weight)
 
   // Set font sizes from defaults
   heading-fontsize = ifnone(heading-fontsize, fontsize)
@@ -213,12 +222,22 @@
   accentcolor-dark = rgb(accentcolor-dark)
   linkcolor = rgb(linkcolor)
 
-  // Top margin (used to extend the title band to the top edge of the page)
-  let margin-top = if type(margin) == dictionary {
-    margin.at("top", default: margin.at("y", default: margin.at("rest", default: 2.5cm)))
-  } else {
-    margin
+  // Add individual margins (e.g. margin-top) to the margin dictionary
+  if type(margin) != dictionary {
+    margin = (rest: margin)
   }
+
+  for (side, value) in (top: margin-top, bottom: margin-bottom, left: margin-left, right: margin-right) {
+    if value != none {
+      margin.insert(side, value)
+    }
+  }
+
+  // Top margin (used to extend the title band to the top edge of the page)
+  let page-margin-top = margin.at(
+    "top",
+    default: margin.at("y", default: margin.at("rest", default: 2.5cm)),
+  )
 
   // Format dates for cover page and title band
   let cover-date-format = "[month repr:long] [day padding:none], [year]"
@@ -449,7 +468,7 @@ if show-cover [
       v(2%)
       align(title-align)[#block(inset: title-inset)[
         #par(leading: 0.65em)[
-          #text(font: title-font, fill: luma(45), weight: "extrabold", size: title-fontsize * 0.85)[#upper[#subtitle]]
+          #text(font: title-font, fill: luma(45), weight: subtitle-weight, size: title-fontsize * 0.85)[#upper[#subtitle]]
         ]
       ]]
     }
@@ -507,7 +526,7 @@ if show-cover [
     block(
       width: 100%,
       fill: accentcolor-dark,
-      outset: (x: 100%, top: margin-top),
+      outset: (x: 100%, top: page-margin-top),
       inset: (bottom: 1.5em),
       stroke: (bottom: 0.5em + accentcolor-light),
       below: 2em,
@@ -529,7 +548,7 @@ if show-cover [
 
         #if subtitle != none {
           par(leading: 0.5em)[
-            #text(font: title-font, weight: "medium", size: title-fontsize * 0.4)[#upper[#subtitle]]
+            #text(font: title-font, weight: subtitle-weight, size: title-fontsize * 0.4)[#upper[#subtitle]]
           ]
         }
 

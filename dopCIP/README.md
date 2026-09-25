@@ -26,6 +26,11 @@ These are the custom features supported by this custom format:
     - `accentcolor-light` used for color bar on title page and the rule below the title band
     - `accentcolor-dark` used for footer and header text and the title band fill
     - `linkcolor` used for links
+- Page layout
+  - Margins default to 1in on the left and right and 1.25in on the top and bottom
+  - Set `margin` with any of `x`, `y`, `top`, `bottom`, `left`, and `right` (e.g. `margin: {x: 0.75in, y: 1in}`); sides that are not set use Typst's default margin, not the format defaults
+  - Set `margin-top`, `margin-bottom`, `margin-left`, or `margin-right` to change a single side; these take precedence over `margin`
+  - Include units with all margin values (e.g. `1in`, `2cm`)
 - Headings
   - Font and size set by `heading-font` and `heading-fontsize` (defaults to "Raleway") <https://fonts.google.com/specimen/Raleway>
   - Weight set by `heading-weight` as a name (e.g. `medium`, `extrabold`) or number from 100 to 900 (defaults to `bold`)
@@ -36,6 +41,7 @@ These are the custom features supported by this custom format:
   - Set `show-cover: false` to hide the title page (defaults to `true`)
   - Font and size for title and subtitle set by `title-font` (defaults to match `heading-font`) and `title-fontsize`
   - Title weight set by `title-weight` as a name (e.g. `semibold`, `regular`) or number from 100 to 900 (defaults to `bold`); also applies to the title band
+  - Subtitle weight set by `subtitle-weight` in the same way (defaults to `medium`); also applies to the title band
   - Set `before-date` and `before-date-modified` to insert text before dates
   - `date` is passed as string (not datetime) and `date-modified` is always displayed (`date` parsing uses a function from the [quarto-invoice](https://github.com/mcanouil/quarto-invoice) custom Typst format)
   - Author font size scaled to 0.5 of `title-fontsize` and dates font size scaled to 0.4 of `title-fontsize`

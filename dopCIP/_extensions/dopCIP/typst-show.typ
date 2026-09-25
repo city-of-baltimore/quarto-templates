@@ -112,6 +112,9 @@ $endif$
 $if(title-weight)$
   title-weight: "$title-weight$",
 $endif$
+$if(subtitle-weight)$
+  subtitle-weight: "$subtitle-weight$",
+$endif$
 $if(title-inset)$
   title-inset: $title-inset$,
 $endif$
@@ -168,6 +171,18 @@ $endif$
 // Page layout
 $if(margin)$
   margin: ($for(margin/pairs)$$margin.key$: $margin.value$,$endfor$),
+$endif$
+$if(margin-top)$
+  margin-top: $margin-top$,
+$endif$
+$if(margin-bottom)$
+  margin-bottom: $margin-bottom$,
+$endif$
+$if(margin-left)$
+  margin-left: $margin-left$,
+$endif$
+$if(margin-right)$
+  margin-right: $margin-right$,
 $endif$
 $if(papersize)$
   paper: "$papersize$",
