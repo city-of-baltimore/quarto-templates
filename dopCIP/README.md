@@ -50,6 +50,7 @@ These are the custom features supported by this custom format:
   - Outline entries use `heading-font`
   - Shown after the title page (following a page break) or after the title band
   - If both `show-cover` and `show-title-band` are enabled, a page break follows the table of contents
+  - Not shown if the document has no headings to list (within `toc-depth`)
 - Header and footer
   - Font can be set with `footer-font` (defaults to match `heading-font`)
   - Header shows the current level 2 heading (all caps text); if `show-cover` is `false`, the header also shows the document title on the left
@@ -66,9 +67,10 @@ These are the custom features supported by this custom format:
   - Tighter spacing between term and definition
   - Colored text with alternate font (matching `table-font`)
 - Tag text
-  - Use a `.tag-text` span to show text in an outlined box: `[Text inside tag]{.tag-text}`
-  - Add a `title` attribute to show a label before the text: `[Text inside tag]{.tag-text title="Status"}`
+  - Use a `.dop-tag-text` span to show text in an outlined box: `[Text inside tag]{.dop-tag-text}`
+  - Add a `title` attribute to show a label before the text: `[Text inside tag]{.dop-tag-text title="Status"}`
   - Outline and label color match `accentcolor`; label uses "Source Sans 3" (falls back to "Arial")
   - Tag text is only styled in PDF output
+  - Tags are rendered by the `dop-tag-text` Typst function; add a space between adjacent tags
 
 Note, you must have the static versions of these fonts installed to use them with this extension. Typst does not yet support variable fonts: https://github.com/typst/typst/issues/185

@@ -45,37 +45,37 @@
   x
 }
 
-#let tag-text(
+// Text in an outlined box with an optional title (used by the dop-tag-text
+// span filter in dopCIP.lua)
+#let dop-tag-text(
   title: none,
   sep: " ",
-  text_color: black,
-  title_color: rgb("#0082BD"),
-  title_weight: "medium",
-  title_font: ("Source Sans 3", "Arial", ),
+  text-color: black,
+  title-color: rgb("#0082BD"),
+  title-weight: "medium",
+  title-font: ("Source Sans 3", "Arial", ),
   radius: 0.45em,
-  padding: 0.35em,
-  tag_background_color: white,
-  tag_inset: (x: 0.45em),
-  tag_outset: (y: 0.35em),
-  tag_baseline: 0em,
+  fill: white,
+  inset: (x: 0.45em),
+  outset: (y: 0.35em),
+  baseline: 0em,
   thickness: 0.06em,
   body,
   ) = {
     box(
-      stroke: (paint: title_color, thickness: thickness),
-      inset: tag_inset,
-      outset: tag_outset,
-      fill: tag_background_color,
+      stroke: (paint: title-color, thickness: thickness),
+      inset: inset,
+      outset: outset,
+      fill: fill,
       radius: radius,
-      baseline: tag_baseline,
+      baseline: baseline,
       if title not in (none, "") {
-        text(fill: title_color, font: title_font, weight: title_weight, title + sep)
-        text(fill: text_color, body)
+        text(fill: title-color, font: title-font, weight: title-weight, title + sep)
+        text(fill: text-color, body)
       } else {
-        text(fill: text_color, body)
+        text(fill: text-color, body)
       }
     )
-    h(padding)
 }
 
 //------------------------------------------------------------------------------
@@ -211,7 +211,7 @@
   }
 
   // Format dates for cover page and title band
-  let cover-date-format = "[month repr:long] [day], [year]."
+  let cover-date-format = "[month repr:long] [day padding:none], [year]"
 
   if date != none {
     date = parse-date(date).display(cover-date-format)
@@ -553,37 +553,46 @@ if show-cover [
     ]
   }
 
-  // ToC
-  let toc-block = if toc {
-    block(above: 0em, below: 2em)[
-    #outline(
-      title: toc_title,
-      depth: toc_depth,
-      indent: toc_indent
-    );
-    ]
+  // ToC (only shown if there are headings to list)
+  let toc-block(pagebreak-after: false) = if toc {
+    context {
+      let entries = query(heading.where(outlined: true)).filter(
+        it => toc_depth == none or it.level <= toc_depth
+      )
+
+      if entries.len() > 0 {
+        block(above: 0em, below: 2em)[
+        #outline(
+          title: toc_title,
+          depth: toc_depth,
+          indent: toc_indent
+        );
+        ]
+
+        if pagebreak-after {
+          pagebreak()
+        }
+      }
+    }
   }
 
   if show-cover and show-title-band {
     // Cover page, ToC, then title band on a new page
-    if toc {
-      toc-block
-      pagebreak()
-    }
+    toc-block(pagebreak-after: true)
     title-band-block
     abstract-block
   } else if show-title-band {
     // Title band, abstract, and ToC on the first page
     title-band-block
     abstract-block
-    toc-block
+    toc-block()
   } else {
     // Abstract on its own page, then ToC
     if abstract != none {
       abstract-block
       pagebreak()
     }
-    toc-block
+    toc-block()
   }
 
   // Show document

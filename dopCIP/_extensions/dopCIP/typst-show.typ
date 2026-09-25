@@ -1,6 +1,6 @@
-// Match tag-text colors to the document accent color
+// Match tag text colors to the document accent color
 $if(accentcolor)$
-#let tag-text = tag-text.with(title_color: rgb(content-to-string([$accentcolor$])))
+#let dop-tag-text = dop-tag-text.with(title-color: rgb(content-to-string([$accentcolor$])))
 $endif$
 
 #show: doc => article(
