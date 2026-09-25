@@ -2,7 +2,14 @@
 title: Untitled
 format:
   dopCIP-typst:
-    table-of-contents: true
+    table-of-contents: false
+    show-cover: false
+    # Set to true to show the title in a band at the top of the first page
+    show-title-band: true
+    # Set to true to show the city logo in the title band
+    title-band-logo: true
+    # Scale logo heights (e.g. 0.75 if a long title overlaps the cover logos)
+    logo-scale: 1
 ---
 
 # Level 1 heading
@@ -43,19 +50,21 @@ Second Term
 : Second Definition
 
 
-Example of "tag text" with no title: [Text inside tag]{.tag-text}
+Example of "tag text" with no title: [Text inside tag]{.dop-tag-text}
 
-Example of "tag text" with title: [Text inside tag]{.tag-text title="Title of tag"}
+Example of "tag text" with title: [Text inside tag]{.dop-tag-text title="Title of tag"}
 
-Example of "tag text" followed by punctuation: [Text inside tag]{.tag-text}, then a comma and a [second tag]{.tag-text title="Title"}.
+Example of "tag text" followed by punctuation: [Text inside tag]{.dop-tag-text}, then a comma and a [second tag]{.dop-tag-text title="Title"}.
 
-Example of "tag text" with an empty title: [Text inside tag]{.tag-text title=""}
+Example of "tag text" with an empty title: [Text inside tag]{.dop-tag-text title=""}
 
-Example of adjacent "tag text": [First tag]{.tag-text}[Second tag]{.tag-text}
+Example of adjacent "tag text": [First tag]{.dop-tag-text} [Second tag]{.dop-tag-text}
 
-Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.tag-text title='Say "hi" #set'}
+Example of "tag text" followed by brackets: [Text inside tag]{.dop-tag-text}(in parentheses) and [Text inside tag]{.dop-tag-text}[in brackets]
 
-Example of long "tag text" with title: [This is a long tagged span of text that needs to wrap across the end of the line to check how the outset looks next to the lines above and below]{.tag-text title="Long"}
+Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.dop-tag-text title='Say "hi" #set'}
+
+Example of long "tag text" with title: [This is a long tagged span of text that needs to wrap across the end of the line to check how the outset looks next to the lines above and below]{.dop-tag-text title="Long"}
 
 
 ### Level 3 heading
