@@ -5,7 +5,7 @@ end
 function Span(el)
     if el.classes:includes('tag-text') then
         local args = ""
-        if el.attributes.title then
+        if el.attributes.title and el.attributes.title ~= "" then
             args = 'title: "' .. escape_typst_string(el.attributes.title) .. '"'
         end
 
