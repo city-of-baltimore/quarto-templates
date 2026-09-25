@@ -1,3 +1,8 @@
+// Match tag-text colors to the document accent color
+$if(accentcolor)$
+#let tag-text = tag-text.with(title_color: rgb("$accentcolor$"))
+$endif$
+
 #show: doc => article(
 
 // Document information
