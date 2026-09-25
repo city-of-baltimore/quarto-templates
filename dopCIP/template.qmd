@@ -1,5 +1,6 @@
 ---
-title: Untitled
+title: Template title
+subtitle: Template subtitle
 format:
   dopCIP-typst:
     table-of-contents: false
