@@ -47,6 +47,16 @@ Example of "tag text" with no title: [Text inside tag]{.tag-text}
 
 Example of "tag text" with title: [Text inside tag]{.tag-text title="Title of tag"}
 
+Example of "tag text" followed by punctuation: [Text inside tag]{.tag-text}, then a comma and a [second tag]{.tag-text title="Title"}.
+
+Example of "tag text" with an empty title: [Text inside tag]{.tag-text title=""}
+
+Example of adjacent "tag text": [First tag]{.tag-text}[Second tag]{.tag-text}
+
+Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.tag-text title='Say "hi" #set'}
+
+Example of long "tag text" with title: [This is a long tagged span of text that needs to wrap across the end of the line to check how the outset looks next to the lines above and below]{.tag-text title="Long"}
+
 
 ### Level 3 heading
 
