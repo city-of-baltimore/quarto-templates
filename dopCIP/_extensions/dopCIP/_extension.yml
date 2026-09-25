@@ -16,5 +16,7 @@ contributes:
       filters:
         - dopCIP.lua
       show-cover: true
+      show-title-band: false
+      title-band-logo: false
       breakable-tables: true
       flipped: false

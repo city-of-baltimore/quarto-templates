@@ -1,5 +1,5 @@
 // import hydra package for header/footer
-#import "@preview/hydra:0.6.2": hydra, anchor
+#import "@preview/hydra:0.6.3": hydra, anchor, selectors
 
 // Parse date function for quarto-invoice
 //
@@ -151,6 +151,8 @@
   caption-align: left,
 
   show-cover: true,
+  // Show title in a colored band at the top of the first page (replaces cover)
+  show-title-band: false,
   breakable-tables: true,
 
   // Table of contents
@@ -166,6 +168,10 @@
   page-number-align: right + bottom,
 
   logo-align: left,
+  // Scale factor for logo heights (e.g. 0.75 to make room for a long title)
+  logo-scale: 1,
+  // Show the city logo in the top-right corner of the title band
+  title-band-logo: false,
 
   // Footer
 
@@ -182,6 +188,11 @@
   footer-font = ifnone(footer-font, heading-font)
   caption-font = ifnone(caption-font, heading-font)
 
+  // Convert numeric heading weight from metadata (e.g. "600") to an integer
+  if type(heading-weight) == str and heading-weight.codepoints().all(c => c in "0123456789") {
+    heading-weight = int(heading-weight)
+  }
+
   // Set font sizes from defaults
   heading-fontsize = ifnone(heading-fontsize, fontsize)
   let cover-fontsize = title-fontsize * 0.5
@@ -191,6 +202,34 @@
   accentcolor-light = rgb(accentcolor-light)
   accentcolor-dark = rgb(accentcolor-dark)
   linkcolor = rgb(linkcolor)
+
+  // Top margin (used to extend the title band to the top edge of the page)
+  let margin-top = if type(margin) == dictionary {
+    margin.at("top", default: margin.at("y", default: margin.at("rest", default: 2.5cm)))
+  } else {
+    margin
+  }
+
+  // Format dates for cover page and title band
+  let cover-date-format = "[month repr:long] [day], [year]."
+
+  if date != none {
+    date = parse-date(date).display(cover-date-format)
+  }
+
+  // Date modified is always shown (defaults to today)
+  if date-modified == none {
+    date-modified = datetime.today().display(cover-date-format)
+  } else {
+    date-modified = parse-date(date-modified).display(cover-date-format)
+  }
+
+  // Level 1 headings shown in the running header and footer (excludes
+  // headings not in the ToC, such as the ToC title)
+  let section-heading = selectors.custom(
+    heading.where(level: 1),
+    filter: (ctx, e) => e.outlined,
+  )
 
   // Formats the author's names in a list with commas and a
   // final "and".
@@ -209,7 +248,10 @@
     numbering: page-numbering,
     number-align: page-number-align,
 
-    header: context if not show-cover {[
+    header: context if query(<title-band>).any(it => it.location().page() == here().page()) {
+      // No running header above the title band (hydra still needs an anchor)
+      anchor()
+    } else if not show-cover {[
       #anchor()
       // running header
       // heading 2
@@ -219,7 +261,7 @@
         baseline: 0.65em,
         fill: accentcolor-dark)[
             #upper[
-              #title  #h(1fr) #hydra(1)
+              #title  #h(1fr) #hydra(2)
             ]
       ]
       #line(length: 100%, stroke: 0.5pt)
@@ -249,7 +291,7 @@
           baseline: -0.5em)[
           #upper[
             // heading 1 / page number
-            #hydra(1) #h(1fr) #counter(page).display()
+            #hydra(section-heading) #h(1fr) #counter(page).display()
           ]
         ]
     ]},
@@ -419,41 +461,30 @@ if show-cover [
   #place(
     bottom + logo-align,
     grid(
-      columns: (2.5in, 2.5in),
+      columns: (2.5in * logo-scale, 2.5in * logo-scale),
       gutter: 0in,
       align: logo-align + horizon,
         image(
               "baltimore-city-dop-logo.png",
-              height: 1.75in,
+              height: 1.75in * logo-scale,
               fit: "contain"
           ),
           image(
             "baltimore-city-logo.png",
-            height: 1.5in,
+            height: 1.5in * logo-scale,
             fit: "contain"
           )
       )
     )
 
   // Show date
-  #let cover-date-format = "[month repr:long] [day], [year]."
-
   #if date != none {
-    date = parse-date(date)
-    date = date.display(cover-date-format)
     align(title-align)[#block(inset: title-inset)[
       #text(size: cover-fontsize * 0.8)[#before-date #date]
     ]]
   }
 
   // Show date modified (always)
-
-  #if date-modified == none {
-    date-modified = datetime.today().display(cover-date-format)
-  } else {
-    date-modified = parse-date(date-modified).display(cover-date-format)
-  }
-
   #align(title-align)[#block(inset: title-inset)[
     #text(size: cover-fontsize * 0.8)[#before-date-modified #date-modified]
   ]]
@@ -461,24 +492,69 @@ if show-cover [
   #pagebreak()
 ]
 
-  // Show abstract (after page break)
+  // Title band (document text follows on the same page)
+  let title-band-block = if show-title-band {
+    block(
+      width: 100%,
+      fill: accentcolor-dark,
+      outset: (x: 100%, top: margin-top),
+      inset: (bottom: 1.5em),
+      stroke: (bottom: 0.5em + accentcolor-light),
+      below: 2em,
+    )[
+      // Label used to hide the running header on the title band page
+      #metadata(none) <title-band>
 
-  if abstract != none {
+      #set text(fill: white)
+      #set par(linebreaks: "simple")
+
+      #let band-text = [
+        #set align(title-align)
+
+        #if title != none {
+          par(leading: 0.5em)[
+            #text(font: title-font, weight: "bold", size: title-fontsize * 0.75)[#upper[#title]]
+          ]
+        }
+
+        #if subtitle != none {
+          par(leading: 0.5em)[
+            #text(font: title-font, weight: "medium", size: title-fontsize * 0.4)[#upper[#subtitle]]
+          ]
+        }
+
+        #text(font: footer-font, size: 0.9em)[
+          // Authors, date, and date modified on separate lines
+          #if authors.len() > 0 [#box(author-string) \ ]
+          #if date != none [#box[#before-date #date] \ ]
+          #box[#before-date-modified #date-modified]
+        ]
+      ]
+
+      // Title text with optional logo in the top-right corner
+      #if title-band-logo {
+        grid(
+          columns: (1fr, auto),
+          column-gutter: 1.5em,
+          align: top,
+          band-text,
+          image("baltimore-city-logo.png", height: 1in * logo-scale, fit: "contain"),
+        )
+      } else {
+        band-text
+      }
+    ]
+  }
+
+  // Abstract
+  let abstract-block = if abstract != none {
     block(inset: title-inset)[
     #text(weight: "semibold")[$labels.abstract$] #h(1em) #abstract
     ]
-
-    pagebreak()
   }
 
-  // Show ToC (after page break)
-
-  if toc {
-    let title = if toc_title == none {
-      auto
-    } else {
-      toc_title
-    }
+  // ToC
+  let toc-block = if toc {
     block(above: 0em, below: 2em)[
     #outline(
       title: toc_title,
@@ -486,6 +562,28 @@ if show-cover [
       indent: toc_indent
     );
     ]
+  }
+
+  if show-cover and show-title-band {
+    // Cover page, ToC, then title band on a new page
+    if toc {
+      toc-block
+      pagebreak()
+    }
+    title-band-block
+    abstract-block
+  } else if show-title-band {
+    // Title band, abstract, and ToC on the first page
+    title-band-block
+    abstract-block
+    toc-block
+  } else {
+    // Abstract on its own page, then ToC
+    if abstract != none {
+      abstract-block
+      pagebreak()
+    }
+    toc-block
   }
 
   // Show document

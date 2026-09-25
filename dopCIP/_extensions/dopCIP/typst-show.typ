@@ -1,6 +1,6 @@
 // Match tag-text colors to the document accent color
 $if(accentcolor)$
-#let tag-text = tag-text.with(title_color: rgb("$accentcolor$"))
+#let tag-text = tag-text.with(title_color: rgb(content-to-string([$accentcolor$])))
 $endif$
 
 #show: doc => article(
@@ -47,6 +47,9 @@ $if(abstract)$
 $endif$
   flipped: $flipped$,
   show-cover: $show-cover$,
+$if(show-title-band)$
+  show-title-band: $show-title-band$,
+$endif$
   breakable-tables: $breakable-tables$,
 
 // Body text typography
@@ -89,7 +92,7 @@ $if(section-numbering)$
   sectionnumbering: "$section-numbering$",
 $endif$
 $if(heading-weight)$
-  heading-weight: heading-weight,
+  heading-weight: "$heading-weight$",
 $endif$
 $if(heading-style)$
   heading-style: "$heading-style$",
@@ -124,20 +127,26 @@ $endif$
 $if(logo-align)$
   logo-align: $logo-align$,
 $endif$
+$if(logo-scale)$
+  logo-scale: $logo-scale$,
+$endif$
+$if(title-band-logo)$
+  title-band-logo: $title-band-logo$,
+$endif$
 
 // Colors
 
 $if(accentcolor)$
-  accentcolor: "$accentcolor$",
+  accentcolor: content-to-string([$accentcolor$]),
 $endif$
 $if(accentcolor-dark)$
-  accentcolor-dark: "$accentcolor-dark$",
+  accentcolor-dark: content-to-string([$accentcolor-dark$]),
 $endif$
 $if(accentcolor-light)$
-  accentcolor-light: "$accentcolor-light$",
+  accentcolor-light: content-to-string([$accentcolor-light$]),
 $endif$
 $if(linkcolor)$
-  linkcolor: "$linkcolor$",
+  linkcolor: content-to-string([$linkcolor$]),
 $endif$
 
 // Table of contents
