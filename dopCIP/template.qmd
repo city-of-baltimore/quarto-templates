@@ -15,6 +15,8 @@ format:
 
 # Level 1 heading
 
+{{< dop-toc title="In this section" >}}
+
 ## Level 2 heading
 
 {{< lipsum 1 >}}
@@ -50,6 +52,11 @@ Term
 Second Term
 : Second Definition
 
+### Level 3 heading
+
+{{< lipsum 1 >}}
+
+# Level 1 heading for tag text examples
 
 Example of "tag text" with no title: [Text inside tag]{.dop-tag-text}
 
@@ -66,8 +73,3 @@ Example of "tag text" followed by brackets: [Text inside tag]{.dop-tag-text}(in 
 Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.dop-tag-text title='Say "hi" #set'}
 
 Example of long "tag text" with title: [This is a long tagged span of text that needs to wrap across the end of the line to check how the outset looks next to the lines above and below]{.dop-tag-text title="Long"}
-
-
-### Level 3 heading
-
-{{< lipsum 1 >}}

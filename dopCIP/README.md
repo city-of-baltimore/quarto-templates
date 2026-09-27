@@ -58,9 +58,21 @@ These are the custom features supported by this custom format:
   - Shown after the title page (following a page break) or after the title band
   - If both `show-cover` and `show-title-band` are enabled, a page break follows the table of contents
   - Not shown if the document has no headings to list (within `toc-depth`)
+- List of figures and list of tables
+  - Set `lof: true` and `lot: true` to show a list of figures and a list of tables after the table of contents
+  - Titles default to "List of Figures" and "List of Tables"; set them with `crossref: {lof-title: ..., lot-title: ...}` (as for LaTeX PDF output) or with top-level `lof-title` and `lot-title`
+  - As in LaTeX PDF output, lists include every numbered figure and table; a table with a label (e.g. `#| label: tbl-x`) but no caption is listed with its number and no text. A list is not shown if there are no figures or tables
+- Section table of contents
+  - Use the `dop-toc` shortcode to insert a table of contents for the current section, e.g. a chapter contents after a level 1 heading: `{{< dop-toc title="In this chapter" >}}`
+  - Lists the headings after the section heading up to the next heading at the same or a higher level; not shown if there are no headings to list
+  - `title`: text shown above the entries (optional)
+  - `depth`: number of heading levels below the section heading to include (defaults to all)
+  - `level`: heading level of the section to list (e.g. `level=1` for the whole chapter when placed under a level 2 heading; defaults to the heading before the shortcode)
+  - `indent`: indent per level as a length such as `1.5em` (defaults to `toc-indent`, or `1.5em`); the first level of entries is not indented
+  - Only shown in PDF output
 - Header and footer
   - Font can be set with `footer-font` (defaults to match `heading-font`)
-  - Header shows the current level 2 heading (all caps text); if `show-cover` is `false`, the header also shows the document title on the left
+  - Header shows the document title on the left and the current level 2 heading on the right (all caps text)
   - Footer shows the current level 1 heading on the left and page number on the right (all caps text)
   - Header and footer are hidden on the title page and the header is hidden on the page with the title band
   - Headings not included in the table of contents (such as the table of contents title) are not shown in the header or footer

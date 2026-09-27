@@ -55,40 +55,8 @@
   weight
 }
 
-// Text in an outlined box with an optional title (used by the dop-tag-text
-// span filter in dopCIP.lua)
-#let dop-tag-text(
-  title: none,
-  sep: " ",
-  text-color: black,
-  title-color: rgb("#0082BD"),
-  title-weight: "medium",
-  title-font: ("Source Sans 3", "Arial", ),
-  radius: 0.45em,
-  fill: white,
-  // Vertical inset adds space between the tag and the lines before and
-  // after; outset adds more padding without changing the line spacing
-  inset: (x: 0.45em, y: 0.25em),
-  outset: (y: 0.2em),
-  baseline: 0em,
-  thickness: 0.06em,
-  body,
-  ) = {
-    box(
-      stroke: (paint: title-color, thickness: thickness),
-      inset: inset,
-      outset: outset,
-      fill: fill,
-      radius: radius,
-      baseline: baseline,
-      if title not in (none, "") {
-        text(fill: title-color, font: title-font, weight: title-weight, title + sep)
-        text(fill: text-color, body)
-      } else {
-        text(fill: text-color, body)
-      }
-    )
-}
+// Component rendering functions (dop-tag-text, dop-section-outline)
+$components.typ()$
 
 //------------------------------------------------------------------------------
 // Document Template
@@ -180,6 +148,13 @@
   toc_title: none,
   toc_depth: none,
   toc_indent: 1.5em,
+
+  // List of figures and list of tables
+
+  lof: false,
+  lof-title: [List of Figures],
+  lot: false,
+  lot-title: [List of Tables],
 
   // Page numbering
 
@@ -280,10 +255,12 @@
     header: context if query(<title-band>).any(it => it.location().page() == here().page()) {
       // No running header above the title band (hydra still needs an anchor)
       anchor()
-    } else if not show-cover {[
+    } else if show-cover and counter(page).get().first() == 1 {
+      // No running header on the cover page
+      none
+    } else {[
       #anchor()
-      // running header
-      // heading 2
+      // running header: title and level 2 heading
       #text(
         font: footer-font,
         weight: "medium",
@@ -293,21 +270,6 @@
               #title  #h(1fr) #hydra(2)
             ]
       ]
-      #line(length: 100%, stroke: 0.5pt)
-
-    ]} else if (counter(page).get().first() > 1) {[
-      #anchor()
-      // running header
-      // heading 2
-      #text(
-        font: footer-font,
-        weight: "medium",
-        baseline: 0.65em,
-        fill: accentcolor-dark)[
-            #upper[
-              #hydra(2)
-            ]
-        ]
       #line(length: 100%, stroke: 0.5pt)
     ]},
 
@@ -384,10 +346,27 @@
 
   set outline.entry(fill: none)
 
+  // Section ToC titles (dop-toc shortcode) use the heading font
+  show <dop-toc-title>: set text(font: heading-font)
+
   // Set ToC entry typography per level, keeping the page number in a
   // consistent font and weight across all levels (only the heading label
   // varies)
-  show outline.entry: it => {
+  show outline.entry: it => context {
+    // Link to the heading or figure, as the default outline entry does
+    // (rebuilding the entry from its parts drops the link). Keep the text
+    // color from outside the link so linkcolor isn't applied to entries.
+    let fill = text.fill
+    let linked(body) = link(it.element.location(), text(fill: fill, body))
+
+    // List of figures and list of tables entries
+    if it.element.func() == figure {
+      return linked(it.indented(
+        text(font: heading-font)[#it.prefix()],
+        text(font: heading-font)[#it.body()] + h(1fr) + text(font: heading-font)[#it.page()],
+      ))
+    }
+
     if it.level == 1 {
       v(12pt, weak: true)
     }
@@ -402,7 +381,7 @@
 
     let page-number = text(font: heading-font, weight: "regular")[#it.page()]
 
-    it.indented(it.prefix(), label + h(1fr) + page-number)
+    linked(it.indented(it.prefix(), label + h(1fr) + page-number))
   }
 
   // Set figure caption font and color
@@ -582,9 +561,12 @@ if show-cover [
     ]
   }
 
-  // ToC (only shown if there are headings to list)
-  let toc-block(pagebreak-after: false) = if toc {
-    context {
+  // ToC, list of figures, and list of tables (each only shown if it has
+  // entries), with an optional page break after them
+  let contents-block(pagebreak-after: false) = context {
+    let shown = false
+
+    if toc {
       let entries = query(heading.where(outlined: true)).filter(
         it => toc_depth == none or it.level <= toc_depth
       )
@@ -597,31 +579,44 @@ if show-cover [
           indent: toc_indent
         );
         ]
-
-        if pagebreak-after {
-          pagebreak()
-        }
+        shown = true
       }
+    }
+
+    for (show-list, title, kind) in (
+      (lof, lof-title, "quarto-float-fig"),
+      (lot, lot-title, "quarto-float-tbl"),
+    ) {
+      if show-list and query(figure.where(kind: kind)).len() > 0 {
+        block(above: 0em, below: 2em)[
+        #outline(title: title, target: figure.where(kind: kind));
+        ]
+        shown = true
+      }
+    }
+
+    if shown and pagebreak-after {
+      pagebreak()
     }
   }
 
   if show-cover and show-title-band {
-    // Cover page, ToC, then title band on a new page
-    toc-block(pagebreak-after: true)
+    // Cover page, ToC and lists, then title band on a new page
+    contents-block(pagebreak-after: true)
     title-band-block
     abstract-block
   } else if show-title-band {
-    // Title band, abstract, and ToC on the first page
+    // Title band, abstract, ToC and lists on the first page
     title-band-block
     abstract-block
-    toc-block()
+    contents-block()
   } else {
-    // Abstract on its own page, then ToC
+    // Abstract on its own page, then ToC and lists
     if abstract != none {
       abstract-block
       pagebreak()
     }
-    toc-block()
+    contents-block()
   }
 
   // Show document

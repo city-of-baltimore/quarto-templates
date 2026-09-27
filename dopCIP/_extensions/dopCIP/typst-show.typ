@@ -3,6 +3,11 @@ $if(accentcolor)$
 #let dop-tag-text = dop-tag-text.with(title-color: rgb(content-to-string([$accentcolor$])))
 $endif$
 
+// Match section ToC indent to the document ToC indent
+$if(toc-indent)$
+#let dop-section-outline = dop-section-outline.with(indent: $toc-indent$)
+$endif$
+
 #show: doc => article(
 
 // Document information
@@ -167,6 +172,26 @@ $if(toc-indent)$
   toc_indent: $toc-indent$,
 $endif$
   toc_depth: $toc-depth$,
+
+// List of figures and list of tables (titles can be set with crossref:
+// lof-title/lot-title, as for LaTeX output, or top-level lof-title/lot-title)
+
+$if(lof)$
+  lof: $lof$,
+$endif$
+$if(crossref.lof-title)$
+  lof-title: [$crossref.lof-title$],
+$elseif(lof-title)$
+  lof-title: [$lof-title$],
+$endif$
+$if(lot)$
+  lot: $lot$,
+$endif$
+$if(crossref.lot-title)$
+  lot-title: [$crossref.lot-title$],
+$elseif(lot-title)$
+  lot-title: [$lot-title$],
+$endif$
 
 // Page layout
 $if(margin)$

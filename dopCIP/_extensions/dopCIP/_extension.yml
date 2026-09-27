@@ -8,15 +8,18 @@ contributes:
       author:
       -  'Baltimore City Department of Planning'
       template-partials:
+        - components.typ
         - typst-template.typ
         - typst-show.typ
       format-resources:
         - baltimore-city-dop-logo.png
         - baltimore-city-logo.png
       filters:
-        - dopCIP.lua
+        - filter.lua
       show-cover: true
       show-title-band: false
       title-band-logo: false
       breakable-tables: true
       flipped: false
+  shortcodes:
+    - shortcodes.lua
