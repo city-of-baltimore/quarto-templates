@@ -82,7 +82,7 @@ These are the custom features supported by this custom format:
   - Unknown keywords stop the render with an error; other keys (such as `center`) are ignored
   - The header or footer (including its line) is hidden if both sides are `none`
   - Text is all caps. Unlike the `page-footer` option for Quarto websites, values are keywords, not Markdown text
-  - Set `page-numbering` to change the page number format (e.g. `i`; defaults to `1`) or to `false` to hide page numbers
+  - Set `page-numbering` to change the page number format (e.g. `i`; defaults to `1`) or to `false` to hide page numbers. A format with two numbers, such as `1 / 1` or `1 of 1`, shows the current page and the total pages
   - Header and footer are hidden on the title page and the header is hidden on the page with the title band
   - Headings not included in the table of contents (such as the table of contents title) are not shown in the header or footer
   - Import [hydra Typst package](https://typst.app/universe/package/hydra/)
@@ -104,6 +104,25 @@ These are the custom features supported by this custom format:
   - Use a `.dop-table-label` span to show text styled like a table caption, without a caption number: `[Table label text]{.dop-table-label}`
   - Font matches `table-font` and color matches `accentcolor` (bold, 0.9em)
   - Only styled in PDF output; rendered by the `dop-table-label` Typst function
+- Section page
+  - Use a `.dop-section-page` div to show a heading (and an optional short summary) on its own page above a colored bar, as a section break:
+
+    ```markdown
+    ::: {.dop-section-page}
+    # Part two
+
+    A short summary of this section.
+    :::
+    ```
+
+  - Adds a page break before and after the section page (without adding a blank page if the section page already starts a page)
+  - The heading can be any level and is included in the table of contents, the running footer, and cross-references
+  - The heading keeps the normal heading style; the heading and summary are shown at 1.2 times their normal size
+  - The bar matches the cover page bar (`accentcolor-light`); add a `fill` attribute with a hex color to change it for one section page, e.g. `::: {.dop-section-page fill="#00415F"}`. Values that are not a hex color (`#RGB` or `#RRGGBB`) are ignored with a warning
+  - The running header is hidden on the section page; the running footer is shown without headings (`heading-1` and `heading-2` are left empty)
+  - Must be at the top level of the document, not inside a callout, column layout, or other div (Typst doesn't allow page breaks inside containers, so the render fails with "pagebreaks are not allowed inside of containers")
+  - Not supported in documents with more than one column
+  - Only shown as a section page in PDF output
 - Secondary header
   - Use a `.dop-secondary-header` span to show a line of small caps text below the running header line and above the title of a page: `[Project details]{.dop-secondary-header}`
   - Place the span in its own paragraph before the page's first heading; it floats to the top of the page it is on

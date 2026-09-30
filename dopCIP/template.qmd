@@ -12,15 +12,17 @@ format:
     # Scale logo heights (e.g. 0.75 if a long title overlaps the cover logos)
     logo-scale: 1
     # Running header and footer: title, heading-1, heading-2, page-number, or
-    # none for each side (defaults shown)
+    # none for each side (defaults: header left heading-2, right none; footer
+    # left heading-1, right page-number)
     page-header:
       left: heading-2
-      right: none
+      right: heading-1
     page-footer:
       left: heading-1
       right: page-number
-    # Page number format, or false to hide page numbers
-    page-numbering: "1"
+    # Page number format (default "1"; "1 / 1" adds the total pages), or false
+    # to hide page numbers
+    page-numbering: "1 / 1"
 ---
 
 # Level 1 heading
@@ -83,6 +85,24 @@ Example of "tag text" followed by brackets: [Text inside tag]{.dop-tag-text}(in 
 Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.dop-tag-text title='Say "hi" #set'}
 
 Example of long "tag text" with title: [This is a long tagged span of text that needs to wrap across the end of the line to check how the outset looks next to the lines above and below]{.dop-tag-text title="Long"}
+
+::: {.dop-section-page}
+# Section page with a summary {#sec-section-page}
+
+A short summary of this section with **bold** text, a [link](https://planning.baltimorecity.gov/), and special characters: Issue #12 costs $5 and [x].
+:::
+
+::: {.dop-section-page fill="#00415F"}
+## Section page without a summary and with a custom fill
+:::
+
+::: {.dop-section-page fill="navy"}
+## Section page with an invalid fill
+
+The `fill="navy"` value is ignored with a warning, so the bar uses the default color.
+:::
+
+Text after three consecutive section pages. Link to the [first section page](#sec-section-page).
 
 # Level 1 heading for table label examples
 

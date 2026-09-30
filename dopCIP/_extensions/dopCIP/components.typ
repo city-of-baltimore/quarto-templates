@@ -61,6 +61,36 @@
   [#text(size: size, weight: weight)[#smallcaps(all: true)[#body]] <dop-secondary-header>],
 )
 
+// Full-width colored bar that extends into the left and right margins (used
+// on the cover page and by dop-section-page)
+#let dop-color-bar(height: 8em, ..args) = rect(
+  width: 100%,
+  outset: (x: 100%),
+  height: height,
+  ..args,
+)
+
+// Section break page: the div content (a heading and an optional short
+// summary) above a colored bar, with page breaks before and after (used by
+// the dop-section-page div handler in filter.lua). Weak page breaks don't add
+// a blank page if the section page already starts a page. The fractional
+// spacing places the content about a third of the way down the page and
+// shrinks to nothing if the content is too long for one page. Text size and
+// the default bar color are set by show rules on the labels in article();
+// fill (a color) overrides the bar color for this page.
+#let dop-section-page(fill: none, body) = {
+  pagebreak(weak: true)
+  // Label used to hide the running header on the section page
+  [#metadata(none) <dop-section-page>]
+  v(1fr)
+  [#block(width: 100%, body) <dop-section-page-body>]
+  v(4%)
+  let bar-args = if fill != none { (fill: fill) } else { (:) }
+  [#dop-color-bar(..bar-args) <dop-section-page-bar>]
+  v(2fr)
+  pagebreak(weak: true)
+}
+
 // Table of contents for the current section (used by the dop-toc shortcode).
 // Lists the headings in the section containing this point, up to the next
 // heading at the same or a higher level than the section heading. Shows

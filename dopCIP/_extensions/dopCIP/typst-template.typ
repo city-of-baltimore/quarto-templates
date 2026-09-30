@@ -56,7 +56,7 @@
 }
 
 // Component rendering functions (dop-tag-text, dop-table-label,
-// dop-secondary-header, dop-section-outline)
+// dop-secondary-header, dop-color-bar, dop-section-page, dop-section-outline)
 $components.typ()$
 
 //------------------------------------------------------------------------------
@@ -250,14 +250,25 @@ $components.typ()$
   page-footer = (left: "heading-1", right: "page-number") + page-footer
 
   // Content for one side of the running header or footer (call in context)
+  // Headings are left empty on section pages (dop-section-page div), where
+  // hydra would show the section before the one starting on the page
+  let on-section-page() = query(<dop-section-page>).any(it => it.location().page() == here().page())
+
   let page-slot(key, option) = if key == "title" {
     title
   } else if key == "heading-1" {
-    hydra(section-heading)
+    if not on-section-page() { hydra(section-heading) }
   } else if key == "heading-2" {
-    hydra(2)
+    if not on-section-page() { hydra(2) }
   } else if key == "page-number" {
-    if page-numbering != none { counter(page).display(page-numbering) }
+    // Show the total pages if the pattern has two counting symbols (e.g.
+    // "1 / 1"), as Typst does for page numbering
+    if page-numbering != none {
+      counter(page).display(
+        page-numbering,
+        both: page-numbering.matches(regex("[1aAiI*]")).len() > 1,
+      )
+    }
   } else if key in ("none", none) {
     none
   } else {
@@ -286,8 +297,9 @@ $components.typ()$
     numbering: page-numbering,
     number-align: page-number-align,
 
-    header: context if query(<title-band>).any(it => it.location().page() == here().page()) {
-      // No running header above the title band (hydra still needs an anchor)
+    header: context if (query(<title-band>) + query(<dop-section-page>)).any(it => it.location().page() == here().page()) {
+      // No running header above the title band or on a section page (hydra
+      // still needs an anchor)
       anchor()
     } else if show-cover and counter(page).get().first() == 1 {
       // No running header on the cover page
@@ -390,6 +402,11 @@ $components.typ()$
 
   // Secondary headers (dop-secondary-header span) match the running header
   show <dop-secondary-header>: set text(font: heading-font, fill: accentcolor-dark)
+
+  // Section pages (dop-section-page div): larger text (heading sizes are
+  // relative, so the heading is also larger) above a bar matching the cover
+  show <dop-section-page-body>: set text(size: 1.2em)
+  show <dop-section-page-bar>: set rect(fill: accentcolor-light)
 
   // Set ToC entry typography per level, keeping the page number in a
   // consistent font and weight across all levels (only the heading label
@@ -497,7 +514,7 @@ if show-cover [
 
   // Show color bar on title page
   #v(4%)
-  #rect(width: 100%, outset: (x: 100%), height: 8em, fill: accentcolor-light)
+  #dop-color-bar(fill: accentcolor-light)
   #v(4%)
 
   // Show authors

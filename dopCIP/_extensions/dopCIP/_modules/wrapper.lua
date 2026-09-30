@@ -27,6 +27,9 @@ for _, unit in ipairs({ 'em', 'pt', 'in', 'cm', 'mm' }) do
     end
 end
 
+--- Lua patterns for a hex color such as #0082BD or #08B.
+M.hex_color_patterns = { '^#%x%x%x$', '^#%x%x%x%x%x%x$' }
+
 --- Return the value if it matches one of the patterns, otherwise warn and
 --- return nil so the Typst default is used.
 --- @param component string component name shown in the warning
@@ -64,6 +67,21 @@ function M.wrap_span(fn, span, args)
     inlines:extend(span.content)
     inlines:insert(pandoc.RawInline('typst', '];'))
     return inlines
+end
+
+--- Wrap a div's content in a Typst function call: #fn(args)[content]
+--- The content stays as Pandoc blocks, so Pandoc converts and escapes it.
+--- @param fn string Typst function name
+--- @param div pandoc.Div
+--- @param args string Typst arguments, already escaped (may be empty)
+--- @return pandoc.Blocks
+function M.wrap_div(fn, div, args)
+    local blocks = pandoc.Blocks({
+        pandoc.RawBlock('typst', '#' .. fn .. '(' .. args .. ')[')
+    })
+    blocks:extend(div.content)
+    blocks:insert(pandoc.RawBlock('typst', ']'))
+    return blocks
 end
 
 return M

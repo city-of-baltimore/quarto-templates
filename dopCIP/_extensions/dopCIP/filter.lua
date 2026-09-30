@@ -2,8 +2,8 @@
 --- @license MIT
 --- @copyright 2024 City of Baltimore
 --- @brief Filter entrypoint: turns custom Markdown spans (dop-tag-text,
---- dop-table-label, dop-secondary-header) into calls to the
---- Typst functions in components.typ.
+--- dop-table-label, dop-secondary-header) and divs (dop-section-page) into
+--- calls to the Typst functions in components.typ.
 
 --- Load a module relative to the extension (absolute paths keep the module
 --- cache from mixing up modules with the same name in other extensions).
@@ -75,6 +75,41 @@ local function Span(el)
     return nil
 end
 
+--- ::: {.dop-section-page fill="#00415F"} ... ::: -> #dop-section-page(fill: rgb("#00415F"))[...]
+--- The div should contain a heading, optionally followed by a short summary.
+--- @param el pandoc.Div
+--- @return pandoc.Blocks|nil
+local function Div(el)
+    if not quarto.doc.is_format('typst') or not el.classes:includes('dop-section-page') then
+        return nil
+    end
+
+    local has_heading = false
+    for _, block in ipairs(el.content) do
+        if block.t == 'Header' then
+            has_heading = true
+            break
+        end
+    end
+    if not has_heading then
+        quarto.log.warning('dop-section-page: div has no heading' ..
+            (el.identifier ~= '' and (' (#' .. el.identifier .. ')') or ''))
+    end
+
+    local args = ''
+    local fill = el.attributes.fill
+    if fill == '' then
+        fill = nil
+    end
+    fill = wrapper.validate('dop-section-page', 'fill', fill,
+        wrapper.hex_color_patterns, 'a hex color such as #00415F')
+    if fill then
+        args = 'fill: rgb("' .. fill .. '")'
+    end
+
+    return wrapper.wrap_div('dop-section-page', el, args)
+end
+
 return {
-    { Span = Span },
+    { Span = Span, Div = Div },
 }
