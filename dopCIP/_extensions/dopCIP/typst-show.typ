@@ -193,6 +193,33 @@ $elseif(lot-title)$
   lot-title: [$lot-title$],
 $endif$
 
+// Page numbering and running header and footer
+$if(page-numbering)$
+  page-numbering: "$page-numbering$",
+$else$
+  page-numbering: none,
+$endif$
+$if(page-header)$
+  page-header: (
+$if(page-header.left)$
+    left: content-to-string([$page-header.left$]),
+$endif$
+$if(page-header.right)$
+    right: content-to-string([$page-header.right$]),
+$endif$
+  ),
+$endif$
+$if(page-footer)$
+  page-footer: (
+$if(page-footer.left)$
+    left: content-to-string([$page-footer.left$]),
+$endif$
+$if(page-footer.right)$
+    right: content-to-string([$page-footer.right$]),
+$endif$
+  ),
+$endif$
+
 // Page layout
 $if(margin)$
   margin: ($for(margin/pairs)$$margin.key$: $margin.value$,$endfor$),

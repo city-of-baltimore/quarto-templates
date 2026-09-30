@@ -157,10 +157,16 @@ $components.typ()$
   lot: false,
   lot-title: [List of Tables],
 
-  // Page numbering
+  // Page numbering (none hides the page number in the header and footer)
 
   page-numbering: "1",
   page-number-align: right + bottom,
+
+  // Running header and footer: content for the left and right of each, as
+  // one of "title", "heading-1", "heading-2", "page-number", or "none".
+  // Sides that are not set use the defaults in article().
+  page-header: (:),
+  page-footer: (:),
 
   logo-align: left,
   // Scale factor for logo heights (e.g. 0.75 to make room for a long title)
@@ -236,6 +242,33 @@ $components.typ()$
     filter: (ctx, e) => e.outlined,
   )
 
+  // Running header and footer content, with defaults for sides not set
+  // (typst-show.typ passes () if neither side is set)
+  if type(page-header) != dictionary { page-header = (:) }
+  if type(page-footer) != dictionary { page-footer = (:) }
+  page-header = (left: "heading-2", right: "none") + page-header
+  page-footer = (left: "heading-1", right: "page-number") + page-footer
+
+  // Content for one side of the running header or footer (call in context)
+  let page-slot(key, option) = if key == "title" {
+    title
+  } else if key == "heading-1" {
+    hydra(section-heading)
+  } else if key == "heading-2" {
+    hydra(2)
+  } else if key == "page-number" {
+    if page-numbering != none { counter(page).display(page-numbering) }
+  } else if key in ("none", none) {
+    none
+  } else {
+    panic(option + ": unknown value \"" + key +
+      "\" (use title, heading-1, heading-2, page-number, or none)")
+  }
+
+  // Header and footer are hidden (including the line) if both sides are none
+  let show-page-header = page-header.values().any(it => it not in ("none", none))
+  let show-page-footer = page-footer.values().any(it => it not in ("none", none))
+
   // Formats the author's names in a list with commas and a
   // final "and".
   authors = ifnone(authors, ())
@@ -259,31 +292,33 @@ $components.typ()$
     } else if show-cover and counter(page).get().first() == 1 {
       // No running header on the cover page
       none
+    } else if not show-page-header {
+      // No running header (hydra still needs an anchor)
+      anchor()
     } else {[
       #anchor()
-      // running header: title and level 2 heading
+      // running header (page-header option)
       #text(
         font: footer-font,
         weight: "medium",
         baseline: 0.65em,
         fill: accentcolor-dark)[
             #upper[
-              #title  #h(1fr) #hydra(2)
+              #page-slot(page-header.left, "page-header") #h(1fr) #page-slot(page-header.right, "page-header")
             ]
       ]
       #line(length: 100%, stroke: 0.5pt)
     ]},
 
-    footer: context if (counter(page).get().first() > 1 or not show-cover) {[
+    footer: context if show-page-footer and (counter(page).get().first() > 1 or not show-cover) {[
         #line(length: 100%, stroke: 0.5pt)
-        // running footer
+        // running footer (page-footer option)
         #text(
           font: footer-font,
           fill: accentcolor-dark,
           baseline: -0.5em)[
           #upper[
-            // heading 1 / page number
-            #hydra(section-heading) #h(1fr) #counter(page).display()
+            #page-slot(page-footer.left, "page-footer") #h(1fr) #page-slot(page-footer.right, "page-footer")
           ]
         ]
     ]},

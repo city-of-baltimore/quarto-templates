@@ -72,8 +72,17 @@ These are the custom features supported by this custom format:
   - Only shown in PDF output
 - Header and footer
   - Font can be set with `footer-font` (defaults to match `heading-font`)
-  - Header shows the document title on the left and the current level 2 heading on the right (all caps text)
-  - Footer shows the current level 1 heading on the left and page number on the right (all caps text)
+  - Set what the running header and footer show with `page-header` and `page-footer`, using `left` and `right` keys. Each side takes one of these keywords:
+    - `title`: document title
+    - `heading-1`: current level 1 heading
+    - `heading-2`: current level 2 heading
+    - `page-number`: page number (formatted with `page-numbering`)
+    - `none`: nothing (use `none`, not `false`: `false` or an empty value uses the default)
+  - Defaults: the header shows the current level 2 heading on the left (`page-header: {left: heading-2, right: none}`); the footer shows the current level 1 heading on the left and the page number on the right (`page-footer: {left: heading-1, right: page-number}`). Sides that are not set use the default, e.g. `page-header: {right: title}` adds the title to the right of the header
+  - Unknown keywords stop the render with an error; other keys (such as `center`) are ignored
+  - The header or footer (including its line) is hidden if both sides are `none`
+  - Text is all caps. Unlike the `page-footer` option for Quarto websites, values are keywords, not Markdown text
+  - Set `page-numbering` to change the page number format (e.g. `i`; defaults to `1`) or to `false` to hide page numbers
   - Header and footer are hidden on the title page and the header is hidden on the page with the title band
   - Headings not included in the table of contents (such as the table of contents title) are not shown in the header or footer
   - Import [hydra Typst package](https://typst.app/universe/package/hydra/)

@@ -11,6 +11,16 @@ format:
     title-band-logo: true
     # Scale logo heights (e.g. 0.75 if a long title overlaps the cover logos)
     logo-scale: 1
+    # Running header and footer: title, heading-1, heading-2, page-number, or
+    # none for each side (defaults shown)
+    page-header:
+      left: heading-2
+      right: none
+    page-footer:
+      left: heading-1
+      right: page-number
+    # Page number format, or false to hide page numbers
+    page-numbering: "1"
 ---
 
 # Level 1 heading
