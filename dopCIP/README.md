@@ -91,5 +91,15 @@ These are the custom features supported by this custom format:
   - Outline and label color match `accentcolor`; label uses "Source Sans 3" (falls back to "Arial")
   - Tag text is only styled in PDF output
   - Tags are rendered by the `dop-tag-text` Typst function; add a space between adjacent tags
+- Table label
+  - Use a `.dop-table-label` span to show text styled like a table caption, without a caption number: `[Table label text]{.dop-table-label}`
+  - Font matches `table-font` and color matches `accentcolor` (bold, 0.9em)
+  - Only styled in PDF output; rendered by the `dop-table-label` Typst function
+- Secondary header
+  - Use a `.dop-secondary-header` span to show a line of small caps text below the running header line and above the title of a page: `[Project details]{.dop-secondary-header}`
+  - Place the span in its own paragraph before the page's first heading; it floats to the top of the page it is on
+  - Add a `dy` attribute to change the vertical offset from the top of the page text (defaults to `-15pt`), e.g. `[Project details]{.dop-secondary-header dy="-12pt"}`; values that are not a length are ignored with a warning
+  - Font matches `heading-font` and color matches `accentcolor-dark`
+  - Only shown in PDF output as a secondary header; rendered by the `dop-secondary-header` Typst function
 
 Note, you must have the static versions of these fonts installed to use them with this extension. Typst does not yet support variable fonts: https://github.com/typst/typst/issues/185

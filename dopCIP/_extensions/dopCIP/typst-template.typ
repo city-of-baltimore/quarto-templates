@@ -55,7 +55,8 @@
   weight
 }
 
-// Component rendering functions (dop-tag-text, dop-section-outline)
+// Component rendering functions (dop-tag-text, dop-table-label,
+// dop-secondary-header, dop-section-outline)
 $components.typ()$
 
 //------------------------------------------------------------------------------
@@ -348,6 +349,12 @@ $components.typ()$
 
   // Section ToC titles (dop-toc shortcode) use the heading font
   show <dop-toc-title>: set text(font: heading-font)
+
+  // Table labels (dop-table-label span) match the table font and accent color
+  show <dop-table-label>: set text(font: table-font, fill: accentcolor)
+
+  // Secondary headers (dop-secondary-header span) match the running header
+  show <dop-secondary-header>: set text(font: heading-font, fill: accentcolor-dark)
 
   // Set ToC entry typography per level, keeping the page number in a
   // consistent font and weight across all levels (only the heading label

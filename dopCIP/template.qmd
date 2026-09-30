@@ -73,3 +73,37 @@ Example of "tag text" followed by brackets: [Text inside tag]{.dop-tag-text}(in 
 Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.dop-tag-text title='Say "hi" #set'}
 
 Example of long "tag text" with title: [This is a long tagged span of text that needs to wrap across the end of the line to check how the outset looks next to the lines above and below]{.dop-tag-text title="Long"}
+
+# Level 1 heading for table label examples
+
+Example of a table label: [Table label text]{.dop-table-label}
+
+[Table label on its own line]{.dop-table-label}
+
+Example of a table label with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.dop-table-label}, then more text.
+
+{{< pagebreak >}}
+
+[Project details]{.dop-secondary-header}
+
+## Page with a secondary header
+
+The secondary header is placed below the running header line, above the title of this page.
+
+{{< lipsum 1 >}}
+
+{{< pagebreak >}}
+
+[Issue #12 costs $5 & [x] **bold**]{.dop-secondary-header dy="-12pt"}
+
+## Page with a secondary header and a custom offset
+
+The secondary header on this page uses `dy="-12pt"` and includes special characters.
+
+{{< pagebreak >}}
+
+## Page with an invalid secondary header offset
+
+Text before the secondary header in the same section. [Invalid offset]{.dop-secondary-header dy="up"}
+
+The secondary header on this page is placed partway down the page but floats to the top; the invalid `dy` value is ignored with a warning.

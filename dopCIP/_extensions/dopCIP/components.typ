@@ -40,6 +40,27 @@
     )
 }
 
+// Inline text styled like a table caption, without caption numbering (used
+// by the dop-table-label span handler in filter.lua). Font and color are set
+// by a show rule on the label in article() to match table-font and
+// accentcolor. The markup is on one line so no spaces are added around the
+// label.
+#let dop-table-label(size: 0.9em, weight: "bold", body) = [#text(size: size, weight: weight)[#body]<dop-table-label>]
+
+// Small caps text placed below the running header line and above the page
+// title, as a secondary header for the page it is on (used by the
+// dop-secondary-header span handler in filter.lua). Floats to the top of the
+// page; dy moves it up into the space below the header line. Font and color
+// are set by a show rule on the label in article() to match heading-font and
+// accentcolor-dark.
+#let dop-secondary-header(dy: -15pt, size: 1em, weight: "medium", body) = place(
+  top + left,
+  float: true,
+  dy: dy,
+  clearance: 0pt,
+  [#text(size: size, weight: weight)[#smallcaps(all: true)[#body]] <dop-secondary-header>],
+)
+
 // Table of contents for the current section (used by the dop-toc shortcode).
 // Lists the headings in the section containing this point, up to the next
 // heading at the same or a higher level than the section heading. Shows
