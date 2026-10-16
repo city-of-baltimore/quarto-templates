@@ -5,6 +5,29 @@
 // shortcodes (shortcodes.lua). Included in typst-template.typ as a partial, so a
 // literal dollar sign must be written as $$.
 
+// Document fonts and colors, set by article() from the format options so
+// components and custom Typst code (e.g. a raw typst block or an imported
+// .typ file) can match the document. Read it in context:
+//
+//   #context text(fill: dop-theme.get().accentcolor)[Text]
+//
+// The defaults match article(), for code that runs before article() sets
+// them. Fonts are arrays of font names; colors are rgb() values.
+#let dop-theme = state("dop-theme", (
+  font: ("Lora", "Georgia", "Libertinus Serif", ),
+  heading-font: ("Raleway", "Arial", ),
+  title-font: ("Raleway", "Arial", ),
+  table-font: ("Source Sans 3", "Arial", ),
+  caption-font: ("Raleway", "Arial", ),
+  footer-font: ("Raleway", "Arial", ),
+  monofont: ("Source Code Pro", "DejaVu Sans Mono", ),
+  fontsize: 11pt,
+  accentcolor: rgb("#0082BD"),
+  accentcolor-light: rgb("#FCB826"),
+  accentcolor-dark: rgb("#00415F"),
+  linkcolor: rgb("#00415F"),
+))
+
 // Text in an outlined box with an optional title (used by the dop-tag-text
 // span handler in filter.lua)
 #let dop-tag-text(

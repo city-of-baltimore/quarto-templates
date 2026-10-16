@@ -55,6 +55,9 @@ $endif$
 $if(show-title-band)$
   show-title-band: $show-title-band$,
 $endif$
+$if(title-band-style)$
+  title-band-style: "$title-band-style$",
+$endif$
   breakable-tables: $breakable-tables$,
 
 // Body text typography

@@ -141,6 +141,9 @@ $components.typ()$
   show-cover: true,
   // Show title in a colored band at the top of the first page (replaces cover)
   show-title-band: false,
+  // Title band style: "full" (title, subtitle, authors, and dates) or
+  // "compact" (smaller title and subtitle only, for short reports)
+  title-band-style: "full",
   breakable-tables: true,
 
   // Table of contents
@@ -249,6 +252,24 @@ $components.typ()$
   page-header = (left: "heading-2", right: "none") + page-header
   page-footer = (left: "heading-1", right: "page-number") + page-footer
 
+  // Check the header and footer values here, before the page is set up: a
+  // panic inside the header also stops its hydra anchor from being placed,
+  // which adds a second, misleading "No `anchor()` found" error
+  let page-slot-keys = ("title", "heading-1", "heading-2", "page-number", "none")
+  for (option, sides) in (("page-header", page-header), ("page-footer", page-footer)) {
+    for (side, key) in sides {
+      if key != none and key not in page-slot-keys {
+        panic(option + "." + side + ": unknown value \"" + key +
+          "\" (use title, heading-1, heading-2, page-number, or none)")
+      }
+    }
+  }
+
+  if title-band-style not in ("full", "compact") {
+    panic("title-band-style: unknown value \"" + title-band-style +
+      "\" (use full or compact)")
+  }
+
   // Content for one side of the running header or footer (call in context)
   // Headings are left empty on section pages (dop-section-page div), where
   // hydra would show the section before the one starting on the page
@@ -269,11 +290,9 @@ $components.typ()$
         both: page-numbering.matches(regex("[1aAiI*]")).len() > 1,
       )
     }
-  } else if key in ("none", none) {
-    none
   } else {
-    panic(option + ": unknown value \"" + key +
-      "\" (use title, heading-1, heading-2, page-number, or none)")
+    // "none" (other values are rejected at the top of article())
+    none
   }
 
   // Header and footer are hidden (including the line) if both sides are none
@@ -491,6 +510,23 @@ $components.typ()$
     )
   )
 
+  // Fonts and colors for components and custom Typst code (see dop-theme in
+  // components.typ)
+  dop-theme.update((
+    font: font,
+    heading-font: heading-font,
+    title-font: title-font,
+    table-font: table-font,
+    caption-font: caption-font,
+    footer-font: footer-font,
+    monofont: monofont,
+    fontsize: fontsize,
+    accentcolor: accentcolor,
+    accentcolor-light: accentcolor-light,
+    accentcolor-dark: accentcolor-dark,
+    linkcolor: linkcolor,
+  ))
+
 if show-cover [
   // Show title
   #if title != none {
@@ -559,15 +595,22 @@ if show-cover [
   #pagebreak()
 ]
 
-  // Title band (document text follows on the same page)
+  // Title band (document text follows on the same page). The compact style
+  // has smaller text, less padding, and no authors or dates.
+  let compact-band = title-band-style == "compact"
   let title-band-block = if show-title-band {
+    // The compact band starts 0.5in from the top edge of the page instead of
+    // filling the whole top margin
+    if compact-band and page-margin-top > 0.5in {
+      v(-(page-margin-top - 0.5in))
+    }
     block(
       width: 100%,
       fill: accentcolor-dark,
       outset: (x: 100%, top: page-margin-top),
-      inset: (bottom: 1.5em),
-      stroke: (bottom: 0.5em + accentcolor-light),
-      below: 2em,
+      inset: (bottom: if compact-band { 0.75em } else { 1.5em }),
+      stroke: (bottom: (if compact-band { 0.3em } else { 0.5em }) + accentcolor-light),
+      below: if compact-band { 1.25em } else { 2em },
     )[
       // Label used to hide the running header on the title band page
       #metadata(none) <title-band>
@@ -580,22 +623,24 @@ if show-cover [
 
         #if title != none {
           par(leading: 0.5em)[
-            #text(font: title-font, weight: title-weight, size: title-fontsize * 0.75)[#upper[#title]]
+            #text(font: title-font, weight: title-weight, size: title-fontsize * if compact-band { 0.5 } else { 0.75 })[#upper[#title]]
           ]
         }
 
         #if subtitle != none {
           par(leading: 0.5em)[
-            #text(font: title-font, weight: subtitle-weight, size: title-fontsize * 0.4)[#upper[#subtitle]]
+            #text(font: title-font, weight: subtitle-weight, size: title-fontsize * if compact-band { 0.3 } else { 0.4 })[#upper[#subtitle]]
           ]
         }
 
-        #text(font: footer-font, size: 0.9em)[
-          // Authors, date, and date modified on separate lines
-          #if authors.len() > 0 [#box(author-string) \ ]
-          #if date != none [#box[#before-date #date] \ ]
-          #box[#before-date-modified #date-modified]
-        ]
+        #if not compact-band {
+          text(font: footer-font, size: 0.9em)[
+            // Authors, date, and date modified on separate lines
+            #if authors.len() > 0 [#box(author-string) \ ]
+            #if date != none [#box[#before-date #date] \ ]
+            #box[#before-date-modified #date-modified]
+          ]
+        }
       ]
 
       // Title text with optional logo in the top-right corner
@@ -605,7 +650,7 @@ if show-cover [
           column-gutter: 1.5em,
           align: top,
           band-text,
-          image("baltimore-city-logo.png", height: 1in * logo-scale, fit: "contain"),
+          image("baltimore-city-logo.png", height: (if compact-band { 0.55in } else { 1in }) * logo-scale, fit: "contain"),
         )
       } else {
         band-text

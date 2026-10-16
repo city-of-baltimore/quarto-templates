@@ -14,9 +14,15 @@ end
 local wrapper = require_local('_modules/wrapper.lua')
 
 --- [text]{.dop-tag-text title="..."} -> #dop-tag-text(title: "...")[text];
+--- A tag with no text (empty or only whitespace, e.g. from a missing value)
+--- is dropped, title included.
 --- @param el pandoc.Span
 --- @return pandoc.Inlines
 local function tag_text(el)
+    if pandoc.utils.stringify(el.content):match('^%s*$') then
+        return pandoc.Inlines({})
+    end
+
     local args = ''
     local title = el.attributes.title
     if title and title ~= '' then

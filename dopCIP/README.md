@@ -49,6 +49,7 @@ These are the custom features supported by this custom format:
   - Set `show-title-band: true` to show a colored band with the title at the top of the first page; the document text follows on the same page (defaults to `false`)
   - Band shows the title and subtitle followed by the authors, published date, and last updated date on separate lines, with a fill matching `accentcolor-dark` and a bottom rule matching `accentcolor-light`
   - Set `show-cover: false` to use the title band in place of the title page. If both are enabled, the title page and table of contents are followed by the title band on a new page
+  - Set `title-band-style: compact` for a shorter band, for short reports such as a one-page summary (defaults to `full`). The compact band has a smaller title and subtitle, no authors or dates, and a smaller logo, and starts 0.5in from the top edge of the page instead of filling the whole top margin
   - Set `title-band-logo: true` to show the City of Baltimore logo in the top-right corner of the title band (defaults to `false`); the logo is 1in tall when `logo-scale` is `1`
 - Logos
   - Set `logo-align` to align the logos on the title page (defaults to `left`)
@@ -79,7 +80,7 @@ These are the custom features supported by this custom format:
     - `page-number`: page number (formatted with `page-numbering`)
     - `none`: nothing (use `none`, not `false`: `false` or an empty value uses the default)
   - Defaults: the header shows the current level 2 heading on the left (`page-header: {left: heading-2, right: none}`); the footer shows the current level 1 heading on the left and the page number on the right (`page-footer: {left: heading-1, right: page-number}`). Sides that are not set use the default, e.g. `page-header: {right: title}` adds the title to the right of the header
-  - Unknown keywords stop the render with an error; other keys (such as `center`) are ignored
+  - Unknown keywords stop the render with an error naming the option and side (e.g. `page-header.left`); other keys (such as `center`) are ignored
   - The header or footer (including its line) is hidden if both sides are `none`
   - Text is all caps. Unlike the `page-footer` option for Quarto websites, values are keywords, not Markdown text
   - Set `page-numbering` to change the page number format (e.g. `i`; defaults to `1`) or to `false` to hide page numbers. A format with two numbers, such as `1 / 1` or `1 of 1`, shows the current page and the total pages
@@ -100,6 +101,7 @@ These are the custom features supported by this custom format:
   - Outline and label color match `accentcolor`; label uses "Source Sans 3" (falls back to "Arial")
   - Tag text is only styled in PDF output
   - Tags are rendered by the `dop-tag-text` Typst function; add a space between adjacent tags
+  - A tag with no text (empty or only whitespace, e.g. from a missing value in an inline R expression) is left out, title included
 - Table label
   - Use a `.dop-table-label` span to show text styled like a table caption, without a caption number: `[Table label text]{.dop-table-label}`
   - Font matches `table-font` and color matches `accentcolor` (bold, 0.9em)
@@ -129,5 +131,10 @@ These are the custom features supported by this custom format:
   - Add a `dy` attribute to change the vertical offset from the top of the page text (defaults to `-15pt`), e.g. `[Project details]{.dop-secondary-header dy="-12pt"}`; values that are not a length are ignored with a warning
   - Font matches `heading-font` and color matches `accentcolor-dark`
   - Only shown in PDF output as a secondary header; rendered by the `dop-secondary-header` Typst function
+- Theme values for custom Typst code
+  - The `dop-theme` state holds the document fonts and colors after the format options are applied, so components, raw `typst` blocks, and imported `.typ` files can match the document without repeating font names or hex codes
+  - Read it in context, e.g. `#context text(fill: dop-theme.get().accentcolor, font: dop-theme.get().table-font)[Text]`
+  - Keys: `font`, `heading-font`, `title-font`, `table-font`, `caption-font`, `footer-font`, `monofont` (arrays of font names), `fontsize`, and `accentcolor`, `accentcolor-light`, `accentcolor-dark`, `linkcolor` (colors)
+  - A function defined in an imported `.typ` file can't see `dop-theme` directly; pass the values in as arguments (e.g. `#context my-component(theme: dop-theme.get())`)
 
 Note, you must have the static versions of these fonts installed to use them with this extension. Typst does not yet support variable fonts: https://github.com/typst/typst/issues/185

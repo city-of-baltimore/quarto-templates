@@ -7,6 +7,8 @@ format:
     show-cover: false
     # Set to true to show the title in a band at the top of the first page
     show-title-band: true
+    # Set to compact for a shorter band (smaller title, no authors or dates)
+    title-band-style: full
     # Set to true to show the city logo in the title band
     title-band-logo: true
     # Scale logo heights (e.g. 0.75 if a long title overlaps the cover logos)
@@ -80,6 +82,8 @@ Example of "tag text" with an empty title: [Text inside tag]{.dop-tag-text title
 
 Example of adjacent "tag text": [First tag]{.dop-tag-text} [Second tag]{.dop-tag-text}
 
+Example of "tag text" with no text (left out, title included): [First tag]{.dop-tag-text title="First"} []{.dop-tag-text title="Empty"} [ ]{.dop-tag-text title="Blank"} [Last tag]{.dop-tag-text title="Last"}
+
 Example of "tag text" followed by brackets: [Text inside tag]{.dop-tag-text}(in parentheses) and [Text inside tag]{.dop-tag-text}[in brackets]
 
 Example of "tag text" with special characters: [Issue #12 costs $5 and [x] me@x.org **bold**]{.dop-tag-text title='Say "hi" #set'}
@@ -137,3 +141,21 @@ The secondary header on this page uses `dy="-12pt"` and includes special charact
 Text before the secondary header in the same section. [Invalid offset]{.dop-secondary-header dy="up"}
 
 The secondary header on this page is placed partway down the page but floats to the top; the invalid `dy` value is ignored with a warning.
+
+{{< pagebreak >}}
+
+## Theme values in custom Typst code
+
+The box below is drawn by a raw `typst` block that reads the document fonts and colors from `dop-theme`, so it matches the format options without repeating them.
+
+```{=typst}
+#context {
+  let theme = dop-theme.get()
+  block(
+    inset: 0.75em,
+    stroke: (left: 3pt + theme.accentcolor),
+    fill: theme.accentcolor.lighten(90%),
+    text(font: theme.table-font, fill: theme.accentcolor-dark)[Box using `table-font`, `accentcolor`, and `accentcolor-dark` from `dop-theme`],
+  )
+}
+```
