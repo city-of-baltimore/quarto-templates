@@ -2,3 +2,6 @@
 .DS_Store
 
 /.luarc.json
+
+# Logos copied next to template.qmd when it is rendered (format-resources)
+/dopCIP/baltimore-city-*.png
