@@ -114,6 +114,29 @@
   pagebreak(weak: true)
 }
 
+// Images stacked on top of each other at the same size (used by the
+// dop-image-layers shortcode), e.g. a basemap with an overlay of features.
+// The first layer sets the size. Later layers are placed at the top left and
+// stretched to the exact size of the first, so they line up with it even if
+// their aspect ratio differs (an overlay with a different ratio is distorted).
+//
+// - layers: array of image paths, bottom layer first
+// - width: width of the stacked image
+// - alignment: left, center, or right
+// - alt: alternative text, applied to the first layer; the other layers are
+//   hidden from assistive technology. none leaves the image without alt text
+//   and "" marks it as decorative
+#let dop-image-layers(layers, width: 100%, alignment: center, alt: none) = {
+  align(alignment, block(width: width, breakable: false, layout(size => {
+    let base = image(layers.first(), width: size.width, alt: alt)
+    let dims = measure(base)
+    base
+    for layer in layers.slice(1) {
+      place(top + left, image(layer, width: dims.width, height: dims.height, fit: "stretch", alt: ""))
+    }
+  })))
+}
+
 // Table of contents for the current section (used by the dop-toc shortcode).
 // Lists the headings in the section containing this point, up to the next
 // heading at the same or a higher level than the section heading. Shows

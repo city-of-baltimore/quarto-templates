@@ -71,6 +71,16 @@ These are the custom features supported by this custom format:
   - `level`: heading level of the section to list (e.g. `level=1` for the whole chapter when placed under a level 2 heading; defaults to the heading before the shortcode)
   - `indent`: indent per level as a length such as `1.5em` (defaults to `toc-indent`, or `1.5em`); the first level of entries is not indented
   - Only shown in PDF output
+- Stacked images
+  - Use the `dop-image-layers` shortcode to place images on top of each other at the same size, e.g. a basemap with an overlay of features drawn as a separate transparent image: `{{< dop-image-layers maps/basemap.png maps/overlay.svg width=6.5in fig-alt="Map of ..." >}}`
+  - Positional arguments are image paths, bottom layer first. Any number of layers is supported. The first layer sets the size and the others are stretched to exactly that size, so every layer should have the same aspect ratio and cover the same extent (an overlay with a different aspect ratio is distorted)
+  - Options follow the names of the Quarto figure options. Use single quotes around a value that contains double quotes
+  - `width`: width of the stacked image as a length such as `6.5in` or a percentage (defaults to the full text width)
+  - `fig-alt`: alternative text describing the combined image. A warning is shown if it is missing; use `fig-alt=""` for a purely decorative image
+  - `fig-align`: `left`, `center`, or `right` (defaults to `center`)
+  - `fig-cap` is not supported yet and is ignored with a warning
+  - Typst embeds an SVG in the PDF again every time it is used, but embeds a PNG once ([typst/typst#7379](https://github.com/typst/typst/issues/7379)). For a base image repeated in a document, use a PNG for the base layer and keep vector overlays as SVG
+  - Only shown in PDF output
 - Header and footer
   - Font can be set with `footer-font` (defaults to match `heading-font`)
   - Set what the running header and footer show with `page-header` and `page-footer`, using `left` and `right` keys. Each side takes one of these keywords:

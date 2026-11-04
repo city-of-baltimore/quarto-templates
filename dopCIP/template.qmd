@@ -159,3 +159,25 @@ The box below is drawn by a raw `typst` block that reads the document fonts and 
   )
 }
 ```
+
+# Level 1 heading for stacked image examples
+
+Example of stacked images (a basemap with a transparent overlay), centered by default:
+
+{{< dop-image-layers example-layers/basemap.png example-layers/overlay.svg width=4in fig-alt="Grid basemap with a blue circle and a red diagonal line drawn over it" >}}
+
+Example with a percentage width, left aligned, and a single layer:
+
+{{< dop-image-layers example-layers/basemap.png width=40% fig-align=left fig-alt="Grid basemap" >}}
+
+Example right aligned, with special characters in the alt text:
+
+{{< dop-image-layers example-layers/basemap.png example-layers/overlay.svg width=3in fig-align=right fig-alt='Issue #12 costs $5 and "quoted" C:\temp' >}}
+
+Example of a decorative image (`fig-alt=""`):
+
+{{< dop-image-layers example-layers/basemap.png width=2in fig-alt="" >}}
+
+Examples with invalid options (ignored with a warning), no `fig-alt` (warns), and an unsupported `fig-cap` (warns):
+
+{{< dop-image-layers example-layers/basemap.png example-layers/overlay.svg width=3 fig-align=middle fig-cap="Caption" >}}

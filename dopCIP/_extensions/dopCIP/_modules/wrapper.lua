@@ -27,6 +27,9 @@ for _, unit in ipairs({ 'em', 'pt', 'in', 'cm', 'mm' }) do
     end
 end
 
+--- Lua patterns for a percentage such as 80%, 12.5%, or .5%.
+M.percent_patterns = { '^%d+%.?%d*%%$', '^%.%d+%%$' }
+
 --- Lua patterns for a hex color such as #0082BD or #08B.
 M.hex_color_patterns = { '^#%x%x%x$', '^#%x%x%x%x%x%x$' }
 
